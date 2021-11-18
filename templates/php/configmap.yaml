@@ -1,0 +1,50 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: default-php
+data:
+  zzz-custom.ini: |
+    ; Basic configuration
+    upload_max_filesize = 100M
+    post_max_size = 100M
+    # Defaulting rather high for image manipulation.  1G is enough for 4k image resizing.
+    memory_limit=1G
+    log_level=notice
+    default_socket_timeout=60
+    max_execution_time=30
+    display_errors=0
+    date.timezone = UTC
+    cgi.fix_pathinfo=0
+    ; Cache configuration
+    opcache.fast_shutdown=1
+    opcache.enable_cli=1
+    opcache.memory_consumption=256
+    opcache.interned_strings_buffer=8
+    opcache.max_accelerated_files=15000
+    opcache.revalidate_freq=60
+    realpath_cache_size=4096k
+    realpath_cache_ttl=3600
+  zzz-custom.conf: |
+    [www]
+    ; Add status page output, could also add further configuration params here
+    ; Status page will have to be accessible thru fcgi via nginx
+    pm.status_path = /php-fpm-status
+    ping.path = /php-fpm-ping
+
+    pm = dynamic
+    ; Get fresh php processes in case some errant script has a leak
+    pm.max_requests = 1000
+
+    ; Max execution time (in .ini settings above) should happen before this.
+    request_terminate_timeout=5m
+
+    ; Max children should equal the pod's memory limit/php memory_limit
+    pm.max_children = 15
+    pm.start_servers = 5
+    pm.min_spare_servers = 4
+    pm.max_spare_servers = 6
+
+    ; Do not print access logs, it ONLY prints GET/POST with status code.
+    ; Should only be used to debug that php exists.
+    ; The php docker base image sets this and redirects it to container stdout.
+    access.log = /dev/null

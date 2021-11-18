@@ -1,0 +1,125 @@
+# Can be switched to a hostPath mount when developing locally
+applicationVolume:
+
+cloudCommand:
+  image: "favish/cloud-command-drupal:3.2.0"
+  extraVolumes: []
+  extraVolumeMounts: []
+  service:
+    port: 80
+    targetPort: 80
+  resources:
+    requests:
+      cpu: 5m
+      memory: 20Mi
+    limits:
+      cpu: 2000m
+      memory: 2Gi
+
+db:
+  database:
+  host:
+  pass:
+  user:
+
+env: dev
+
+extraEnvs:
+
+ingress:
+  annotations:
+  hosts:
+  service:
+    name: varnish
+    port: 80
+  tls:
+    enabled: false
+    secretName: "tls-secret"
+    custom:
+      crt:
+      key:
+
+initContainer:
+  enabled: true
+  image:
+  tag:
+
+nginx:
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+  configMapName: "default-nginx"
+  extraAnnotations:
+  extraVolumes: []
+  extraVolumeMounts: []
+  fqdn:
+  image: "nginx:1.15-alpine"
+  # Only used when autoscaling is disabled.
+  replicaCount:
+  resources:
+    requests:
+      cpu: 10m
+      memory: 30Mi
+  service:
+    port: 80
+    targetPort: 80
+    targetName: "nginx"
+
+php:
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+  configMapName: "default-php"
+  extraAnnotations:
+  extraVolumes: []
+  extraVolumeMounts: []
+  fqdn:
+  image: "favish/php-7.3-fpm-drupal-8:1.2.3"
+  metrics:
+    image: "bakins/php-fpm-exporter"
+    imageTag: "v0.4.1"
+    resources:
+      requests:
+        memory: 10M
+        cpu: 1m
+  # Only used when autoscaling is disabled.
+  replicaCount:
+  resources:
+    requests:
+      cpu: 1
+      memory: 1G
+  service:
+    port: 9000
+    targetPort: 9000
+    targetName: "php-fpm"
+
+s3Filesystem:
+  enabled: false
+  accessKey:
+  secretKey:
+  bucket:
+  region:
+  hostname:
+
+xdebug:
+  enabled: false
+  extraVolumes: []
+  extraVolumeMounts: []
+  image: "favish/php-7.3-fpm-xdebug:1.0.0"
+  # If you want to connect to xdebug when your chart is running outside of
+  #  Docker for Mac, you'll need to add your IP address here.
+  remoteHost: "host.docker.internal"
+  resources:
+    requests:
+      memory: 10M
+      cpu: 1m
+  service:
+    port: 9000
+    targetPort: 9000
+    targetName: "xdebug"

@@ -1,0 +1,92 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: php
+  labels:
+    app.kubernetes.io/name: "{{ .Chart.Name }}"
+    app.kubernetes.io/version: "{{ .Chart.Version }}"
+spec:
+{{- if not .Values.php.autoscaling.enabled }}
+  replicas: {{ .Values.php.replicaCount }}
+{{- end }}
+  strategy:
+    type: "RollingUpdate"
+    rollingUpdate:
+      maxSurge: 100%
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      component: "php"
+  template:
+    metadata:
+      annotations:
+        prometheus.io.scrape: "true"
+        prometheus.io.port: "9253"
+    {{- with .Values.php.extraAnnotations }}
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        component: "php"
+    spec:
+{{- if .Values.initContainer.enabled }}
+      initContainers:
+{{ include "drupal.initContainer" . | indent 6 }}
+{{- end }}
+      containers:
+        - name: "php-fpm"
+          image: {{ .Values.php.image }}
+          ports:
+            - containerPort: {{ .Values.php.service.targetPort }}
+          env:
+{{- include "drupal.env" . | indent 12 }}
+{{- if .Values.extraEnvs }}
+{{ toYaml .Values.extraEnvs | indent 12 }}
+{{- end }}
+          resources:
+{{ toYaml .Values.php.resources | indent 12 }}
+          volumeMounts:
+            - name: "php-configmap"
+              mountPath: "/usr/local/etc/php/conf.d/zzz-custom.ini"
+              subPath: "zzz-custom.ini"
+            - name: "php-configmap"
+              mountPath: "/usr/local/etc/php-fpm.d/zzz-custom.conf"
+              subPath: "zzz-custom.conf"
+            - name: "drupal-source"
+              mountPath: "/var/www/docroot"
+              subPath: "docroot"
+            - name: "drupal-source"
+              mountPath: "/var/www/config"
+              subPath: "config"
+            - name: "drupal-source"
+              mountPath: "/var/www/vendor"
+              subPath: "vendor"
+            - name: "drupal-source"
+              mountPath: "/var/www/composer.json"
+              subPath: "composer.json"
+{{- if .Values.php.extraVolumeMounts }}
+{{ toYaml .Values.php.extraVolumeMounts | indent 12 }}
+{{- end }}
+        # Exporter suggested from prometheus docs: https://prometheus.io/docs/instrumenting/exporters/
+        # https://github.com/bakins/php-fpm-exporter
+        # Prometheus, in weave-cloud, will discover this via polling the service which is created below.
+        - name: "php-fpm-exporter"
+          image: {{ .Values.php.metrics.image }}:{{ .Values.php.metrics.imageTag }}
+          args:
+            - "--addr=0.0.0.0:9253"
+            - "--fastcgi=tcp://127.0.0.1:{{ .Values.php.service.targetPort }}/php-fpm-status"
+          ports:
+            - containerPort: 9253
+          resources:
+{{ toYaml .Values.php.metrics.resources | indent 12 }}
+      volumes:
+        - name: "host-sys"
+          hostPath:
+            path: "/sys"
+        - name: "php-configmap"
+          configMap:
+            name: {{ .Values.php.configMapName }}
+        - name: "drupal-source"
+{{ toYaml .Values.applicationVolume | indent 10 }}
+{{- if .Values.php.extraVolumes }}
+{{ toYaml .Values.php.extraVolumes | indent 8 }}
+{{- end }}

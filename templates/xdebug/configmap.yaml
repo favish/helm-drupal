@@ -1,0 +1,32 @@
+{{- if .Values.xdebug.enabled }}
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: xdebug-php
+data:
+  zzz-custom.ini: |
+    ; Basic configuration
+    upload_max_filesize = 100M
+    post_max_size = 100M
+    memory_limit=1600M
+    log_level = notice
+    date.timezone = UTC
+    cgi.fix_pathinfo=0
+    ; Cache configuration
+    opcache.fast_shutdown=1
+    opcache.enable_cli=1
+    # Opcache for cloud command is configured for minimal caching and large potential resource usage
+    opcache.memory_consumption=256
+    opcache.interned_strings_buffer=8
+    opcache.max_accelerated_files=15000
+    opcache.revalidate_freq=0
+    realpath_cache_size=64k
+    realpath_cache_ttl=1
+  zzz-custom.conf: |
+    [www]
+    ; Get fresh php processes in case some errant script has a leak
+    pm.max_requests = 200
+    ; Xdebug should generally be off, so we'll use ondemand instead here.
+    pm = ondemand
+    pm.max_children = 20
+{{- end }}

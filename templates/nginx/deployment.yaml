@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  labels:
+    app.kubernetes.io/name: "{{ .Chart.Name }}"
+    app.kubernetes.io/version: "{{ .Chart.Version }}"
+spec:
+{{- if not .Values.nginx.autoscaling.enabled }}
+  replicas: {{ .Values.nginx.replicaCount }}
+{{- end }}
+  strategy:
+    type: "RollingUpdate"
+    rollingUpdate:
+      maxSurge: 100%
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      component: "nginx"
+  template:
+    metadata:
+      annotations:
+        prometheus.io.scrape: "true"
+        prometheus.io.port: "9253"
+    {{- with .Values.nginx.extraAnnotations }}
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        component: "nginx"
+    spec:
+{{- if .Values.initContainer.enabled }}
+      initContainers:
+{{ include "drupal.initContainer" . | indent 6 }}
+{{- end }}
+      containers:
+        - name: "nginx"
+          image: {{ .Values.nginx.image }}
+          ports:
+          - containerPort: {{ .Values.nginx.service.port }}
+          livenessProbe:
+            httpGet:
+              # Add host header to pass trusted_hosts check
+              path: /health
+              port: {{ .Values.nginx.service.targetPort }}
+              httpHeaders:
+                - name: "Host"
+                  value: {{ .Values.nginx.fqdn }}
+            # During extremely high load, container should let php-fpm manage children as much as possible
+            # If the container reports unhealthy, it causes a CrashLoopBackoff that can exacerbate an outage from an otherwise
+            # sustainable amount of load
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            failureThreshold: 6
+          env:
+{{- include "drupal.env" . | indent 12 }}
+{{- if .Values.extraEnvs }}
+{{ toYaml .Values.extraEnvs | indent 12 }}
+{{- end }}
+          resources:
+{{ toYaml .Values.nginx.resources | indent 12 }}
+          volumeMounts:
+            # Do not mount the entire configmap, will wipe directory
+            - name: "nginx-configmap"
+              mountPath: "/etc/nginx/nginx.conf"
+              subPath: "nginx.conf"
+            - name: "nginx-configmap"
+              mountPath: "/etc/nginx/default.conf"
+              subPath: "default.conf"
+            - name: "drupal-source"
+              mountPath: "/var/www"
+{{- if .Values.nginx.extraVolumeMounts }}
+{{ toYaml .Values.nginx.extraVolumeMounts | indent 12 }}
+{{- end }}
+      volumes:
+        - name: "host-sys"
+          hostPath:
+            path: "/sys"
+        - name: "nginx-configmap"
+          configMap:
+            name: {{ .Values.nginx.configMapName }}
+        - name: "drupal-source"
+{{ toYaml .Values.applicationVolume | indent 10 }}
+{{- if .Values.nginx.extraVolumes }}
+{{ toYaml .Values.nginx.extraVolumes | indent 8 }}
+{{- end }}

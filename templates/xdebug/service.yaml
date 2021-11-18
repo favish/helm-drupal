@@ -1,0 +1,16 @@
+{{- if .Values.xdebug.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: xdebug
+  labels:
+    app.kubernetes.io/name: "{{ .Chart.Name }}"
+    app.kubernetes.io/version: "{{ .Chart.Version }}"
+spec:
+  ports:
+    - port: {{ .Values.xdebug.service.port }}
+      targetPort: {{ .Values.xdebug.service.targetPort }}
+      name: {{ .Values.xdebug.service.targetName }}
+  selector:
+    component: "xdebug"
+{{- end }}

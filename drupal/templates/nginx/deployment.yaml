@@ -44,7 +44,7 @@ spec:
               port: {{ .Values.nginx.service.targetPort }}
               httpHeaders:
                 - name: "Host"
-                  value: {{ .Values.nginx.fqdn }}
+                  value: {{ .Values.fqdn }}
             # During extremely high load, container should let php-fpm manage children as much as possible
             # If the container reports unhealthy, it causes a CrashLoopBackoff that can exacerbate an outage from an otherwise
             # sustainable amount of load
@@ -68,8 +68,8 @@ spec:
               subPath: "default.conf"
             - name: "drupal-source"
               mountPath: "/var/www"
-{{- if .Values.nginx.extraVolumeMounts }}
-{{ toYaml .Values.nginx.extraVolumeMounts | indent 12 }}
+{{- if .Values.extraVolumeMounts }}
+{{ toYaml .Values.extraVolumeMounts | indent 12 }}
 {{- end }}
       volumes:
         - name: "host-sys"
@@ -80,6 +80,6 @@ spec:
             name: {{ .Values.nginx.configMapName }}
         - name: "drupal-source"
 {{ toYaml .Values.applicationVolume | indent 10 }}
-{{- if .Values.nginx.extraVolumes }}
-{{ toYaml .Values.nginx.extraVolumes | indent 8 }}
+{{- if .Values.extraVolumes }}
+{{ toYaml .Values.extraVolumes | indent 8 }}
 {{- end }}

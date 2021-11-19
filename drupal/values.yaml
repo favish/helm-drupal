@@ -3,8 +3,6 @@ applicationVolume:
 
 cloudCommand:
   image: "favish/cloud-command-drupal:3.2.0"
-  extraVolumes: []
-  extraVolumeMounts: []
   service:
     port: 80
     targetPort: 80
@@ -25,6 +23,12 @@ db:
 env: dev
 
 extraEnvs:
+
+extraVolumes: []
+
+extraVolumeMounts: []
+
+fqdn:
 
 ingress:
   annotations:
@@ -53,9 +57,6 @@ nginx:
     # targetMemoryUtilizationPercentage: 80
   configMapName: "default-nginx"
   extraAnnotations:
-  extraVolumes: []
-  extraVolumeMounts: []
-  fqdn:
   image: "nginx:1.15-alpine"
   # Only used when autoscaling is disabled.
   replicaCount:
@@ -77,9 +78,6 @@ php:
     # targetMemoryUtilizationPercentage: 80
   configMapName: "default-php"
   extraAnnotations:
-  extraVolumes: []
-  extraVolumeMounts: []
-  fqdn:
   image: "favish/php-7.3-fpm-drupal-8:1.2.3"
   metrics:
     image: "bakins/php-fpm-exporter"
@@ -109,8 +107,6 @@ s3Filesystem:
 
 xdebug:
   enabled: false
-  extraVolumes: []
-  extraVolumeMounts: []
   image: "favish/php-7.3-fpm-xdebug:1.0.0"
   # If you want to connect to xdebug when your chart is running outside of
   #  Docker for Mac, you'll need to add your IP address here.

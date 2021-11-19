@@ -63,8 +63,8 @@ spec:
             - name: "drupal-source"
               mountPath: "/var/www/composer.json"
               subPath: "composer.json"
-{{- if .Values.php.extraVolumeMounts }}
-{{ toYaml .Values.php.extraVolumeMounts | indent 12 }}
+{{- if .Values.extraVolumeMounts }}
+{{ toYaml .Values.extraVolumeMounts | indent 12 }}
 {{- end }}
         # Exporter suggested from prometheus docs: https://prometheus.io/docs/instrumenting/exporters/
         # https://github.com/bakins/php-fpm-exporter
@@ -87,6 +87,6 @@ spec:
             name: {{ .Values.php.configMapName }}
         - name: "drupal-source"
 {{ toYaml .Values.applicationVolume | indent 10 }}
-{{- if .Values.php.extraVolumes }}
-{{ toYaml .Values.php.extraVolumes | indent 8 }}
+{{- if .Values.extraVolumes }}
+{{ toYaml .Values.extraVolumes | indent 8 }}
 {{- end }}

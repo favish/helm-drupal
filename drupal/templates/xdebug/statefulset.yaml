@@ -52,8 +52,8 @@ spec:
             - name: "drupal-source"
               mountPath: "/var/www/composer.json"
               subPath: "composer.json"
-{{- if .Values.xdebug.extraVolumeMounts }}
-{{ toYaml .Values.xdebug.extraVolumeMounts | indent 12 }}
+{{- if .Values.extraVolumeMounts }}
+{{ toYaml .Values.extraVolumeMounts | indent 12 }}
 {{- end }}
       volumes:
         - name: "php-configmap"
@@ -61,7 +61,7 @@ spec:
             name: "xdebug-php"
         - name: "drupal-source"
 {{ toYaml .Values.applicationVolume | indent 10 }}
-{{- if .Values.xdebug.extraVolumes }}
-{{ toYaml .Values.xdebug.extraVolumes | indent 8 }}
+{{- if .Values.extraVolumes }}
+{{ toYaml .Values.extraVolumes | indent 8 }}
 {{- end }}
 {{- end }}

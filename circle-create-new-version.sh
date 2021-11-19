@@ -29,7 +29,7 @@ git config --global user.name "favish-ci"
 git config --global user.email "dev@favish.com"
 
 git add .
-git commit -m "Create $CHARTNAME version $VERSION [ci skip]"
+git commit -m "Create $CHARTNAME version $CIRCLE_TAG [ci skip]"
 git push origin gh-pages
 
 

@@ -9,7 +9,7 @@
 - name: "MYSQL_USER"
   value: "{{ .Values.db.user }}"
 - name: "BASE_URL"
-  value: "{{ .Values.php.fqdn }}"
+  value: "{{ .Values.fqdn }}"
 - name: "VARNISH_STATEFULSET_DOMAIN"
   value: "varnish-internal.{{ .Release.Namespace }}.svc.cluster.local"
 - name: "DRUPAL_ENV"

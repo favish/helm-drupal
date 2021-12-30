@@ -2,19 +2,27 @@ apiVersion: v1
 entries:
   drupal:
   - apiVersion: v2
-    created: 2021-11-19T17:44:43.064165308Z
+    created: 2021-12-30T18:01:28.792308052Z
+    description: A Helm chart for managing a Drupal application in Kubernetes
+    digest: 52678bb1b28ac89ea8d7af27b4ade3c0eb2f082ab51961e50eb7dc1d5f7eee1a
+    name: drupal
+    urls:
+    - https://favish.github.io/helm-drupal/drupal-1.0.4.tgz
+    version: 1.0.4
+  - apiVersion: v2
+    created: 2021-12-30T18:01:28.791777Z
     description: A Helm chart for managing a Drupal application in Kubernetes
     digest: 3e0e8408376145b3c4fadbec7096d156c5f19b39945721d153f6c8eac83f52c8
     name: drupal
     urls:
-    - https://favish.github.com/helm-drupal/drupal-1.0.3.tgz
+    - https://favish.github.io/helm-drupal/drupal-1.0.3.tgz
     version: 1.0.3
   - apiVersion: v2
-    created: 2021-11-19T17:44:43.063079979Z
+    created: 2021-12-30T18:01:28.79126176Z
     description: A Helm chart for managing a Drupal application in Kubernetes
     digest: 084f5ad38723150e7c99feb78adba21a48aa86548aa13350d38c0709b75847c4
     name: drupal
     urls:
-    - https://favish.github.com/helm-drupal/drupal-1.0.2.tgz
+    - https://favish.github.io/helm-drupal/drupal-1.0.2.tgz
     version: 1.0.2
-generated: 2021-11-19T17:44:43.062324756Z
+generated: 2021-12-30T18:01:28.790591458Z

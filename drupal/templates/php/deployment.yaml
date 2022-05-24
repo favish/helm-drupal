@@ -51,8 +51,18 @@ spec:
             - name: "php-configmap"
               mountPath: "/usr/local/etc/php-fpm.d/zzz-custom.conf"
               subPath: "zzz-custom.conf"
-            - name: "drupal-source"
-              mountPath: "/var/www"
+            - name: "drupal-source-docroot"
+              mountPath: "/var/www/docroot"
+              subPath: "docroot"
+            - name: "drupal-source-config"
+              mountPath: "/var/www/config"
+              subPath: "config"
+            - name: "drupal-source-vendor"
+              mountPath: "/var/www/vendor"
+              subPath: "vendor"
+            - name: "drupal-source-composer"
+              mountPath: "/var/www/composer.json"
+              subPath: "composer.json"
 {{- if .Values.extraVolumeMounts }}
 {{ toYaml .Values.extraVolumeMounts | indent 12 }}
 {{- end }}
@@ -75,8 +85,14 @@ spec:
         - name: "php-configmap"
           configMap:
             name: {{ .Values.php.configMapName }}
-        - name: "drupal-source"
-{{ toYaml .Values.applicationVolume | indent 10 }}
+        - name: "drupal-source-docroot"
+{{ toYaml .Values.applicationVolumeDocroot | indent 10 }}
+        - name: "drupal-source-config"
+{{ toYaml .Values.applicationVolumeConfig | indent 10 }}
+        - name: "drupal-source-vendor"
+{{ toYaml .Values.applicationVolumeVendor | indent 10 }}
+        - name: "drupal-source-composer"
+{{ toYaml .Values.applicationVolumeComposer | indent 10 }}
 {{- if .Values.extraVolumes }}
 {{ toYaml .Values.extraVolumes | indent 8 }}
 {{- end }}

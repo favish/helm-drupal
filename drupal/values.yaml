@@ -1,5 +1,8 @@
 # Can be switched to a hostPath mount when developing locally
-applicationVolume:
+applicationVolumeDocroot:
+applicationVolumeConfig:
+applicationVolumeVendor:
+applicationVolumeComposer:
 
 cloudCommand:
   image: "favish/cloud-command-drupal:3.2.0"

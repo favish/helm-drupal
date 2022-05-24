@@ -52,17 +52,7 @@ spec:
               mountPath: "/usr/local/etc/php-fpm.d/zzz-custom.conf"
               subPath: "zzz-custom.conf"
             - name: "drupal-source"
-              mountPath: "/var/www/docroot"
-              subPath: "docroot"
-            - name: "drupal-source"
-              mountPath: "/var/www/config"
-              subPath: "config"
-            - name: "drupal-source"
-              mountPath: "/var/www/vendor"
-              subPath: "vendor"
-            - name: "drupal-source"
-              mountPath: "/var/www/composer.json"
-              subPath: "composer.json"
+              mountPath: "/var/www"
 {{- if .Values.extraVolumeMounts }}
 {{ toYaml .Values.extraVolumeMounts | indent 12 }}
 {{- end }}

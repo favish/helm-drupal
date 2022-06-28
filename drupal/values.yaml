@@ -5,7 +5,7 @@ applicationVolumeVendor:
 applicationVolumeComposer:
 
 cloudCommand:
-  image: "favish/cloud-command-drupal:3.2.0"
+  image: "favish/cloud-command-drupal:5.1.0"
   service:
     port: 80
     targetPort: 80
@@ -81,7 +81,7 @@ php:
     # targetMemoryUtilizationPercentage: 80
   configMapName: "default-php"
   extraAnnotations:
-  image: "favish/php-7.3-fpm-drupal-8:1.2.3"
+  image: "favish/php-fpm-drupal:1.0.10"
   metrics:
     image: "bakins/php-fpm-exporter"
     imageTag: "v0.4.1"
@@ -110,7 +110,7 @@ s3Filesystem:
 
 xdebug:
   enabled: false
-  image: "favish/php-7.3-fpm-xdebug:1.0.0"
+  image: "favish/php-fpm-xdebug:1.0.0"
   # If you want to connect to xdebug when your chart is running outside of
   #  Docker for Mac, you'll need to add your IP address here.
   remoteHost: "host.docker.internal"

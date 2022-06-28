@@ -5,7 +5,7 @@ applicationVolumeVendor:
 applicationVolumeComposer:
 
 cloudCommand:
-  image: "favish/cloud-command-drupal:5.1.0"
+  image: "favish/cloud-command-drupal:5.2.0"
   service:
     port: 80
     targetPort: 80

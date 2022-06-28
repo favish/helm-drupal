@@ -1,8 +1,5 @@
 # Can be switched to a hostPath mount when developing locally
-applicationVolumeDocroot:
-applicationVolumeConfig:
-applicationVolumeVendor:
-applicationVolumeComposer:
+applicationVolume:
 
 db:
   database:

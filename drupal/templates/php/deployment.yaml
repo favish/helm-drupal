@@ -78,6 +78,27 @@ spec:
             - containerPort: 9253
           resources:
 {{ toYaml .Values.php.metrics.resources | indent 12 }}
+      {{- if .Values.blackfire.enabled }}
+      {{- with .Values.blackfire }}
+        - name: "blackfire"
+          image: "blackfire/blackfire"
+          resources:
+{{ toYaml .resources | indent 12 }}
+          ports:
+            - containerPort: 8707
+          env:
+            - name: "BLACKFIRE_SERVER_ID"
+              value: {{ .server_id }}
+            - name: "BLACKFIRE_SERVER_TOKEN"
+              value: {{ .server_token }}
+            - name: "BLACKFIRE_CLIENT_ID"
+              value: {{ .client_id }}
+            - name: "BLACKFIRE_CLIENT_TOKEN"
+              value: {{ .client_token }}
+            - name: "BLACKFIRE_LOG_LEVEL"
+              value: '4'
+      {{- end }}
+      {{- end }}
       volumes:
         - name: "host-sys"
           hostPath:

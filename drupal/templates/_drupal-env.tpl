@@ -14,6 +14,18 @@
   value: "varnish-internal.{{ .Release.Namespace }}.svc.cluster.local"
 - name: "DRUPAL_ENV"
   value: {{ .Values.env }}
+{{- if .Values.blackfire.enabled }}
+{{- with .Values.blackfire }}
+- name: "BLACKFIRE_SERVER_ID"
+  value: {{ .server_id }}
+- name: "BLACKFIRE_SERVER_TOKEN"
+  value: {{ .server_token }}
+- name: "BLACKFIRE_CLIENT_ID"
+  value: {{ .client_id }}
+- name: "BLACKFIRE_CLIENT_TOKEN"
+  value: {{ .client_token }}
+{{- end }}
+{{- end }}
 {{- if .Values.s3Filesystem.enabled }}
 {{- with .Values.s3Filesystem }}
 - name: "S3_ACCESS_KEY"

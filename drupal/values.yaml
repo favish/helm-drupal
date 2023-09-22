@@ -1,6 +1,18 @@
 # Can be switched to a hostPath mount when developing locally
 applicationVolume:
 
+# This will add a sidecar container to the drupal deployment as well as inject environment variables into drupal's php-fpm container
+blackfire:
+  enabled: false
+  server_id:
+  server_token:
+  client_id:
+  client_token:
+  resources:
+    requests:
+      cpu: 1m
+      memory: 10M
+
 db:
   database:
   host:

@@ -24,6 +24,8 @@ data:
     opcache.revalidate_freq=60
     realpath_cache_size=4096k
     realpath_cache_ttl=3600
+    ; Enable APCu for caching
+    apc.enabled=1
   zzz-custom.conf: |
     [www]
     ; Add status page output, could also add further configuration params here

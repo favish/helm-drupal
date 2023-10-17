@@ -29,6 +29,8 @@ extraVolumeMounts: []
 
 fqdn:
 
+imagePullSecrets: []
+
 ingress:
   annotations:
   hosts:

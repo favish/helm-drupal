@@ -1,5 +1,7 @@
 # Can be switched to a hostPath mount when developing locally
 applicationVolume:
+  enabled: false
+  path:
 
 # This will add a sidecar container to the drupal deployment as well as inject environment variables into drupal's php-fpm container
 blackfire:
@@ -57,7 +59,7 @@ nginx:
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
   configMapName: "default-nginx"
-  extraAnnotations:
+  extraAnnotations: {}
   image: "nginx:1.15-alpine"
   # Only used when autoscaling is disabled.
   replicaCount:

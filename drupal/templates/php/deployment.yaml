@@ -108,8 +108,14 @@ spec:
         - name: "php-configmap"
           configMap:
             name: {{ .Values.php.configMapName }}
+{{- if .Values.applicationVolume.enabled }}
         - name: "drupal-source"
-{{ toYaml .Values.applicationVolume | indent 10 }}
+          hostPath:
+            path: {{ .Values.applicationVolume.path }}
+{{- else }}
+        - name: "drupal-source"
+          emptyDir: {}
+{{- end  }}
 {{- if .Values.extraVolumes }}
 {{ toYaml .Values.extraVolumes | indent 8 }}
 {{- end }}

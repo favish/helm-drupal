@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.0.0] - 2023-11-01
+### Changed
+- Restructure the usage of the application volume for local environments due to parsing errors. 
+  This change is not backwards compatible with previous versions of the chart. You now need to use
+  applicationVolume.enabled and applicationVolume.hostPath to mount the application volume.
+
 ## [3.2.0] - 2023-10-17
 ### Changed
 - Add support for imagePullSecrets

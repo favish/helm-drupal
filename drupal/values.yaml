@@ -31,7 +31,9 @@ extraVolumeMounts: []
 
 fqdn:
 
-imagePullSecrets: []
+imagePullSecrets:
+  enabled: false
+  secrets: []
 
 ingress:
   annotations:

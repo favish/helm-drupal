@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.0.1] - 2023-11-03
+### Changed
+- Fix bug with how imagePullSecrets is used
+
 ## [4.0.0] - 2023-11-01
 ### Changed
 - Restructure the usage of the application volume for local environments due to parsing errors. 

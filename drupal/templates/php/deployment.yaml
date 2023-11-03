@@ -28,8 +28,10 @@ spec:
       labels:
         component: "php"
     spec:
+{{- if .Values.imagePullSecrets.enabled }}
       imagePullSecrets:
-{{ toYaml .Values.imagePullSecrets | indent 6 }}
+{{ toYaml .Values.imagePullSecrets.secrets | indent 6 }}
+{{- end}}
 {{- if .Values.initContainer.enabled }}
       initContainers:
 {{ include "drupal.initContainer" . | indent 6 }}

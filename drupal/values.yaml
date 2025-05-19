@@ -82,6 +82,13 @@ php:
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
   configMapName: "default-php"
+  session:
+    useCustomCookie: false
+    cookie:
+      domain: ""
+      secure: "0"
+      path: "/"
+
   extraAnnotations:
   image: "favish/php-fpm:3.0.5"
   metrics:

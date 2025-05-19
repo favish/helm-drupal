@@ -26,6 +26,13 @@ data:
     realpath_cache_ttl=3600
     ; Enable APCu for caching
     apc.enabled=1
+
+    {{- if .Values.session.useCustomCookie }}
+    ; Custom session cookie configuration
+    session.cookie_domain={{ .Values.session.cookie.domain | quote }}
+    session.cookie_secure={{ .Values.session.cookie.secure | quote }}
+    session.cookie_path={{ .Values.session.cookie.path | quote }}
+    {{- end }}
   zzz-custom.conf: |
     [www]
     ; Add status page output, could also add further configuration params here

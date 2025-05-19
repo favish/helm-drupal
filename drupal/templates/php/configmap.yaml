@@ -27,7 +27,7 @@ data:
     ; Enable APCu for caching
     apc.enabled=1
 
-    {{- if .Values.session.useCustomCookie }}
+    {{- if (default false .Values.session.useCustomCookie) }}
     ; Custom session cookie configuration
     session.cookie_domain={{ .Values.session.cookie.domain | quote }}
     session.cookie_secure={{ .Values.session.cookie.secure | quote }}

@@ -27,11 +27,11 @@ data:
     ; Enable APCu for caching
     apc.enabled=1
 
-    {{- if (default false .Values.session.useCustomCookie) }}
+    {{- if (default false .Values.php.session.useCustomCookie) }}
     ; Custom session cookie configuration
-    session.cookie_domain={{ .Values.session.cookie.domain | quote }}
-    session.cookie_secure={{ .Values.session.cookie.secure | quote }}
-    session.cookie_path={{ .Values.session.cookie.path | quote }}
+    session.cookie_domain={{ .Values.php.session.cookie.domain | quote }}
+    session.cookie_secure={{ .Values.php.session.cookie.secure | quote }}
+    session.cookie_path={{ .Values.php.session.cookie.path | quote }}
     {{- end }}
   zzz-custom.conf: |
     [www]

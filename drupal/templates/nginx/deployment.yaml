@@ -72,9 +72,6 @@ spec:
 {{ toYaml .Values.extraVolumeMounts | indent 12 }}
 {{- end }}
       volumes:
-        - name: "host-sys"
-          hostPath:
-            path: "/sys"
         - name: "nginx-configmap"
           configMap:
             name: {{ .Values.nginx.configMapName }}

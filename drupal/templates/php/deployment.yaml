@@ -41,6 +41,14 @@ spec:
           image: {{ .Values.php.image }}
           ports:
             - containerPort: {{ .Values.php.service.targetPort }}
+        {{- with .Values.php.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+        {{- end }}
+        {{- with .Values.php.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+        {{- end }}
           env:
 {{- include "drupal.env" . | indent 12 }}
 {{- if .Values.extraEnvs }}
@@ -104,9 +112,6 @@ spec:
       {{- end }}
       {{- end }}
       volumes:
-        - name: "host-sys"
-          hostPath:
-            path: "/sys"
         - name: "php-configmap"
           configMap:
             name: {{ .Values.php.configMapName }}

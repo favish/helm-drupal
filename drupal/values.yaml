@@ -81,6 +81,25 @@ php:
     maxReplicas: 10
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
+  # Optional dedicated cron pod. When enabled, a separate Deployment (no HPA)
+  # runs `drush cron` locally every `period` seconds, so heavy cron runs never
+  # drive the serving php autoscaler. Reuses php.image + the init container.
+  # Default-off: existing consumers keep using whatever cron they already have.
+  cronWorker:
+    enabled: false
+    # Seconds slept between drush cron runs.
+    period: 60
+    replicaCount: 1
+    drushPath: "/var/www/vendor/bin/drush"
+    drupalRoot: "/var/www/docroot"
+    # Optional --uri passed to drush (needed by cron tasks that build absolute
+    # URLs, e.g. sitemap/feeds). Leave empty to omit.
+    uri: ""
+    extraAnnotations: {}
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
   configMapName: "default-php"
   session:
     useCustomCookie: false

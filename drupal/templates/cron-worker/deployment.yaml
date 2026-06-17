@@ -1,0 +1,93 @@
+{{- if .Values.php.cronWorker.enabled }}
+# Optional dedicated cron pod that runs `drush cron` LOCALLY on a schedule,
+# isolated from the serving php Deployment (no HPA). Reuses the same init
+# container, image and drupal.env as the php container, so drush bootstraps the
+# real codebase + DB. Default-off so other consumers of this chart are
+# unaffected; opt in with php.cronWorker.enabled=true.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cron-worker
+  labels:
+    app.kubernetes.io/name: "{{ .Chart.Name }}"
+    app.kubernetes.io/version: "{{ .Chart.Version }}"
+spec:
+  replicas: {{ .Values.php.cronWorker.replicaCount }}
+  # Recreate (not RollingUpdate) so a new pod never runs cron alongside the old
+  # one during a rollout.
+  strategy:
+    type: "Recreate"
+  selector:
+    matchLabels:
+      component: "cron-worker"
+  template:
+    metadata:
+    {{- with .Values.php.cronWorker.extraAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        component: "cron-worker"
+    spec:
+{{- if .Values.imagePullSecrets.enabled }}
+      imagePullSecrets:
+{{ toYaml .Values.imagePullSecrets.secrets | indent 6 }}
+{{- end}}
+{{- if .Values.initContainer.enabled }}
+      initContainers:
+{{ include "drupal.initContainer" . | indent 6 }}
+{{- end }}
+      containers:
+        - name: "cron-worker"
+          image: {{ .Values.php.image }}
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              echo "[cron-worker] starting: drush cron every {{ .Values.php.cronWorker.period }}s"
+              while true; do
+                echo "[cron-worker] $(date -u '+%Y-%m-%dT%H:%M:%SZ') running drush cron"
+                {{ .Values.php.cronWorker.drushPath }} --root={{ .Values.php.cronWorker.drupalRoot }} {{- if .Values.php.cronWorker.uri }} --uri={{ .Values.php.cronWorker.uri }}{{- end }} cron || echo "[cron-worker] drush cron failed (exit $?)"
+                sleep {{ .Values.php.cronWorker.period }}
+              done
+          env:
+{{- include "drupal.env" . | indent 12 }}
+{{- if .Values.extraEnvs }}
+{{ toYaml .Values.extraEnvs | indent 12 }}
+{{- end }}
+          resources:
+{{ toYaml .Values.php.cronWorker.resources | indent 12 }}
+          volumeMounts:
+            - name: "php-configmap"
+              mountPath: "/usr/local/etc/php/conf.d/zzz-custom.ini"
+              subPath: "zzz-custom.ini"
+            - name: "drupal-source"
+              mountPath: "/var/www/docroot"
+              subPath: "docroot"
+            - name: "drupal-source"
+              mountPath: "/var/www/config"
+              subPath: "config"
+            - name: "drupal-source"
+              mountPath: "/var/www/vendor"
+              subPath: "vendor"
+            - name: "drupal-source"
+              mountPath: "/var/www/composer.json"
+              subPath: "composer.json"
+{{- if .Values.extraVolumeMounts }}
+{{ toYaml .Values.extraVolumeMounts | indent 12 }}
+{{- end }}
+      volumes:
+        - name: "php-configmap"
+          configMap:
+            name: {{ .Values.php.configMapName }}
+{{- if .Values.applicationVolume.enabled }}
+        - name: "drupal-source"
+          hostPath:
+            path: {{ .Values.applicationVolume.path }}
+{{- else }}
+        - name: "drupal-source"
+          emptyDir: {}
+{{- end  }}
+{{- if .Values.extraVolumes }}
+{{ toYaml .Values.extraVolumes | indent 8 }}
+{{- end }}
+{{- end }}

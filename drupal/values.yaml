@@ -110,6 +110,20 @@ php:
 
   extraAnnotations:
   image: "favish/php-fpm:3.0.5"
+  # Optional probes for the php-fpm container. Default off (empty) for backwards
+  # compatibility. A readiness check on the FPM port gates rollout traffic so
+  # nginx does not 502 from a pod whose code/opcache is not ready yet. Example:
+  #   readinessProbe:
+  #     tcpSocket: { port: 9000 }
+  #     initialDelaySeconds: 5
+  #     periodSeconds: 10
+  #   livenessProbe:
+  #     tcpSocket: { port: 9000 }
+  #     initialDelaySeconds: 30
+  #     periodSeconds: 30
+  #     failureThreshold: 6
+  livenessProbe: {}
+  readinessProbe: {}
   metrics:
     image: "bakins/php-fpm-exporter"
     imageTag: "v0.4.1"

@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.3.0] - 2026-06-17
+### Removed
+- Dead `host-sys` (`hostPath: /sys`) volume from the php and nginx deployments.
+  It was declared but never mounted by any container, and a `/sys` hostPath can
+  cause pods to be rejected under restrictive PodSecurity admission. Removal is
+  inert for running containers.
+### Added
+- Optional `php.livenessProbe` / `php.readinessProbe` passthrough on the php-fpm
+  container (default empty = off, no change for existing consumers). A readiness
+  check on the FPM port gates rollout traffic so nginx does not 502 from a pod
+  that is not ready yet.
+
 ## [4.2.0] - 2026-06-17
 ### Added
 - Optional `cron-worker` Deployment that runs `drush cron` locally on a schedule,

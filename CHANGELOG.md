@@ -23,6 +23,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `php.cronWorker.enabled` (default `false`), so existing consumers are
   unaffected. Reuses the init container, `php.image` and `drupal.env`.
 
+## [4.1.2] - 2025-05-19
+### Fixed
+- Correct the session PHP key path.
+
+## [4.1.1] - 2025-05-19
+### Fixed
+- Add a default value to `useCustomCookie`.
+
+## [4.1.0] - 2025-05-19
+### Added
+- Allow customization of the session cookie.
+
 ## [4.0.1] - 2023-11-03
 ### Changed
 - Fix bug with how imagePullSecrets is used
@@ -61,9 +73,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - PHP bumps to favish/php-fpm:2.0.0 and favish/php-fpm-xdebug:2.0.0
 
+## [2.2.1] - 2022-06-28
+### Changed
+- Revert the volume mounts to what was in 1.0.4.
+
+## [2.1.1] - 2022-06-28
+### Removed
+- Removed the cloud-command template.
+
 ## [2.1.0] - 2022-06-28
 ### Changed
 - Removed cloud command pod.
+
+## [2.0.4] - 2022-06-28
+### Changed
+- Pull in the latest cloud-command image.
+
+## [2.0.3] - 2022-06-28
+### Changed
+- Update image values for php-fpm.
 
 ## [2.0.2] - 2022-05-22
 ### Changed
@@ -78,6 +106,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Subpaths don't work on WSL2 for HostPath mounted volumes. In order to support WSL based development we need to either 
   mount the whole application directory or we need to individually make volumes for each of these previous subpaths.
 
+## [1.0.4] - 2021-12-30
+### Changed
+- Update the GitHub Pages domain.
+
 ## [1.0.3] - 2021-11-19
 ### Changed
 - Made FQDN value, extraVolumes and extraVolumeMounts top-level properties.
@@ -85,6 +117,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.2] - 2021-11-19
 ### Changed
 - Work out package management kinks.
+
+## [1.0.1] - 2021-11-19
+### Fixed
+- Fix chart name.
 
 ## [1.0.0] - 2021-11-18
 ### Added

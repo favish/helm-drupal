@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.1.0] - 2026-06-17
+### Added
+- Optional `cron-worker` Deployment that runs `drush cron` locally on a schedule,
+  isolated from the serving php Deployment (no HPA). Gated behind
+  `php.cronWorker.enabled` (default `false`), so existing consumers are
+  unaffected. Reuses the init container, `php.image` and `drupal.env`.
+
 ## [4.0.1] - 2023-11-03
 ### Changed
 - Fix bug with how imagePullSecrets is used
